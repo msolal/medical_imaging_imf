@@ -25,8 +25,7 @@ class SchrodBridgeIMF(torch.nn.Module):
                 z: TensorType["batch","channels","width","height"],
                 t : TensorType["batch","channels","width","height"]
                 ) -> TensorType["batch", "channels", "width", "height"]:
-        r"""Joint probability \Pi^{0}_{t|0,1} = Q_{t|0,1}
-        """
+        r"""Joint probability \Pi^{0}_{t|0,1} = Q_{t|0,1}"""
         return t * x1 + (1-t) * x0 + self.sigma * torch.sqrt(t*(1-t)) * z
 
     @torch.no_grad()
@@ -36,8 +35,7 @@ class SchrodBridgeIMF(torch.nn.Module):
             n_timesteps: int,
             return_trajectories : bool = False,
         ):
-        """Perform a forward SDE sampling process.
-        """
+        """Perform a forward SDE sampling process."""
         dt = 1./n_timesteps
         batch_size = x0.shape[0]
         ts = torch.arange(n_timesteps, device = x0.device) / n_timesteps
@@ -47,7 +45,7 @@ class SchrodBridgeIMF(torch.nn.Module):
         for i in range(n_timesteps):
             t = torch.ones((batch_size,1), device = x0.device) * ts[i]
             pred = self.network_forward(t, x)
-            dw = torch.randn_like(x1) * math.sqrt(dt)
+            dw = torch.randn_like(x0) * math.sqrt(dt)
             x = x + pred * dt + self.sigma * dw # Euler - Maruyama
             if return_trajectories:
                 trajectories.append(x.detach())
@@ -64,8 +62,7 @@ class SchrodBridgeIMF(torch.nn.Module):
             n_timesteps : int,
             return_trajectories : bool = False,
         ):
-        """Perform a backward SDE sampling process.
-        """
+        """Perform a backward SDE sampling process."""
         dt = 1./n_timesteps
         batch_size = x1.shape[0]
         ts = 1 - torch.arange(n_timesteps, device = x1.device)/n_timesteps
@@ -85,12 +82,13 @@ class SchrodBridgeIMF(torch.nn.Module):
         else:
             return x
 
-    def loss_forward(self,
-                    x0: TensorType["batch","channels","width","height"],
-                    x1 : TensorType["batch","channels","width","height"],
-                    z: TensorType["batch","channels","width","height"],
-                    t : TensorType["batch","channels","width","height"]
-                    ) -> TensorType["batch","channels","width","height"]:
+    def loss_forward(
+        self,
+        x0: TensorType["batch","channels","width","height"],
+        x1 : TensorType["batch","channels","width","height"],
+        z: TensorType["batch","channels","width","height"],
+        t : TensorType["batch","channels","width","height"]
+    ) -> TensorType["batch","channels","width","height"]:
         """Nabla log Q_{T|t}(X_T | X_t) = (X_1 - X_t)/(1-t) then replacing x_t by the interpolant
         we use the scaling of the loss Appendix H
         """
@@ -107,12 +105,13 @@ class SchrodBridgeIMF(torch.nn.Module):
 
         return loss.sum()
 
-    def loss_backward(self,
-                    x0: torch.Tensor,
-                    x1 : torch.Tensor,
-                    z: torch.Tensor,
-                    t : torch.Tensor
-                    ) -> torch.Tensor:
+    def loss_backward(
+        self,
+        x0: torch.Tensor,
+        x1 : torch.Tensor,
+        z: torch.Tensor,
+        t : torch.Tensor
+    ) -> torch.Tensor:
         """Nabla log Q_{t|0}(X_t | X_0) = (X_0 - X_t)/(t) then replacing x_t by the interpolant
         we use the scaling of the loss Appendix H
         """
@@ -149,9 +148,9 @@ class JointIMF(SchrodBridgeIMF):
         )
 
         self.lambda = lambda
-        
+
     def loss_consistency(
-        self, 
+        self,
         x0: torch.Tensor,
         x1 : torch.Tensor,
         z: torch.Tensor,
@@ -170,16 +169,16 @@ class JointIMF(SchrodBridgeIMF):
         return loss
 
     def loss(
-        self, 
+        self,
         x0: torch.Tensor,
         x1 : torch.Tensor,
         z: torch.Tensor,
         t : torch.Tensor
     ):
         return self.loss_forward(x0, x1, z, t) + self.loss_backward(x0, x1, z, t) + self.lambda * self.loss_consistency(x0, x1, z, t)
-    
+
     def mixture(
-        self, 
+        self,
         x0: torch.Tensor,
         x1 : torch.Tensor,
     ):
@@ -188,7 +187,7 @@ class JointIMF(SchrodBridgeIMF):
         x1_pred = self.sample_forward_sde(x0)
 
         return (0.5*(x0 + x0_pred), 0.5*(x1 + x1_pred))
-        
+
 
 class ClassicalIMF(SchrodingerBridgeIMF):
 
@@ -208,10 +207,8 @@ class ClassicalIMF(SchrodingerBridgeIMF):
             ema,
             sigma,
         )
-        
+
     def loss(self):
 
-    
-    def 
 
-   
+    def
