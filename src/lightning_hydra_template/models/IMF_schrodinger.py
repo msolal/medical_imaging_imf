@@ -53,8 +53,9 @@ class SchrodBridgeIMF(torch.nn.Module):
                 trajectories.append(x.detach())
 
         if return_trajectories:
-            return trajectories
-        return x
+            return x, trajectories
+        else:
+            return x
 
     @torch.no_grad()
     def backward_sample_sde(
@@ -80,10 +81,9 @@ class SchrodBridgeIMF(torch.nn.Module):
                 trajectories.append(x.detach())
 
         if return_trajectories:
-            return trajectories
-        return x
-
-
+            return x, trajectories
+        else:
+            return x
 
     def loss_forward(self,
                     x0: TensorType["batch","channels","width","height"],
@@ -133,19 +133,9 @@ class JointIMF(SchrodBridgeIMF):
 
     def __init__(
         self,
-        shrod_bridge_imf,
-        n_iteration :int,
-        n_inner_iteration : int
-    ):
-
-        self.n_iteration = n_iteration
-        self.n_inner_iteration = n_inner_iteration
-
-        self.shrod_bridge_imf = shrod_bridge_imf
-
-
-
-     ema : torch.nn.Module,
+        network_forward : torch.nn.Module,
+        network_backward : torch.nn.Module,
+        ema : torch.nn.Module,
         sigma : float = 1.,
         lambda : float = 1.,
     ):
@@ -197,7 +187,7 @@ class JointIMF(SchrodBridgeIMF):
         x0_pred = self.sample_backward_sde(x1)
         x1_pred = self.sample_forward_sde(x0)
 
-        return 0.5 * (x0 + x0_pred, x1 + x1_pred)
+        return (0.5*(x0 + x0_pred), 0.5*(x1 + x1_pred))
         
 
 class ClassicalIMF(SchrodingerBridgeIMF):
@@ -220,8 +210,8 @@ class ClassicalIMF(SchrodingerBridgeIMF):
         )
         
     def loss(self):
-    
-    def mixture(self):
 
+    
+    def 
 
    
