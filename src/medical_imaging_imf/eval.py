@@ -3,8 +3,6 @@ from typing import Any
 import hydra
 from lightning import LightningDataModule, LightningModule, Trainer
 from lightning.pytorch.loggers import Logger
-from omegaconf import DictConfig
-
 from lightning_hydra_template.utils import (
     RankedLogger,
     extras,
@@ -13,6 +11,7 @@ from lightning_hydra_template.utils import (
     pre_hydra_routine,
     task_wrapper,
 )
+from omegaconf import DictConfig
 
 log = RankedLogger(__name__, rank_zero_only=True)
 

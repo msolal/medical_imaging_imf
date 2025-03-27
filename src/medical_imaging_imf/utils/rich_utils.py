@@ -5,11 +5,10 @@ import rich
 import rich.syntax
 import rich.tree
 from hydra.core.hydra_config import HydraConfig
+from lightning_hydra_template.utils import pylogger
 from lightning_utilities.core.rank_zero import rank_zero_only
 from omegaconf import DictConfig, OmegaConf, open_dict
 from rich.prompt import Prompt
-
-from lightning_hydra_template.utils import pylogger
 
 log = pylogger.RankedLogger(__name__, rank_zero_only=True)
 

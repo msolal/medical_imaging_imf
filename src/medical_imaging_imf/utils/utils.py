@@ -13,9 +13,8 @@ from typing import Any
 import rootutils
 from hydra.core.override_parser.overrides_parser import OverridesParser
 from hydra.utils import call
-from omegaconf import DictConfig, OmegaConf
-
 from lightning_hydra_template.utils import pylogger, rich_utils
+from omegaconf import DictConfig, OmegaConf
 
 log = pylogger.RankedLogger(__name__, rank_zero_only=True)
 

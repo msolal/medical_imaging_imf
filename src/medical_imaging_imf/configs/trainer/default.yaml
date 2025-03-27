@@ -1,0 +1,19 @@
+_target_: trainer.DSBMJointTrainer
+
+n_imf: 20
+n_refresh: 2
+n_epoch: 5
+
+accelerator: gpu
+devices: 1
+
+ema:
+  enable: True
+  decay: 0.999
+
+# mixed precision for extra speed-up
+# precision: 16
+
+# perform a validation loop every N training epochs
+checkpoint_every_n_imf: 1
+check_val_every_n_refresh: 1
