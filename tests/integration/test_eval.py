@@ -4,8 +4,8 @@ import pytest
 from hydra.core.hydra_config import HydraConfig
 from omegaconf import DictConfig, open_dict
 
-from lightning_hydra_template.eval import evaluate
-from lightning_hydra_template.train import train
+from medical_imaging_imf.eval import evaluate
+from medical_imaging_imf.train import train
 
 
 @pytest.mark.slow

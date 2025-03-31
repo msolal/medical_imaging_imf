@@ -13,8 +13,9 @@ from typing import Any
 import rootutils
 from hydra.core.override_parser.overrides_parser import OverridesParser
 from hydra.utils import call
-from lightning_hydra_template.utils import pylogger, rich_utils
 from omegaconf import DictConfig, OmegaConf
+
+from medical_imaging_imf.utils import pylogger, rich_utils
 
 log = pylogger.RankedLogger(__name__, rank_zero_only=True)
 
@@ -306,3 +307,40 @@ def get_metric_value(metric_dict: dict[str, Any], metric_name: str | None) -> fl
     log.info(f"Retrieved metric value! <{metric_name}={metric_value}>")
 
     return metric_value
+
+
+def resolve_slice_resize_target_shape(img_size: int, slice_direction: int) -> tuple[int, int, int]:
+    """Resolves the slice resize target shape, for square output slices.
+
+    Args:
+        img_size (int): Output image size e.g. 64 or 128
+        slice_direction (int): Slice direction as defined in clinicadl (0, 1 or 2)
+
+    Raises:
+        ValueError: If slice_direction is not 0, 1 or 2
+
+    Returns:
+        Tuple[int, int, int]: 3-dimensional output shape, with the slice direction set to 1
+        and the other dimensions set to img_size.
+    """
+    if slice_direction == 0:
+        return (1, img_size, img_size)
+    if slice_direction == 1:
+        return (img_size, 1, img_size)
+    if slice_direction == 2:
+        return (img_size, img_size, 1)
+    raise ValueError("Invalid slice direction")
+
+
+def resolve_slices(slice_min: int, slice_max:int, slice_stride:int) -> list[int]:
+    """Resolves the slices to extract from the image for clinicadl.
+
+    Args:
+        slice_min (int): Minimum slice index.
+        slice_max (int): Maximum slice index.
+        slice_stride (int): Stride for slice extraction.
+
+    Returns:
+        list[int]: List of slices to extract.
+    """
+    return list(range(slice_min, slice_max, slice_stride))

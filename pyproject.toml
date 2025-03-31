@@ -59,8 +59,8 @@ test = [
 ]
 
 [project.scripts]
-template-train = "lightning_hydra_template.train:main"
-template-eval = "lightning_hydra_template.eval:main"
+template-train = "medical_imaging_imf.train:main"
+template-eval = "medical_imaging_imf.eval:main"
 
 [build-system]
 requires = ["hatchling"]

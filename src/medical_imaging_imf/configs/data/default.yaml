@@ -1,0 +1,30 @@
+
+data_dir: ${paths.data_dir}
+split_dir: ${paths.split_dir}
+
+tensor_conversion_name: 
+
+slice_min: 
+slice_max: 
+slice_stride: 
+slice_direction: 
+
+img_size: 128
+
+preprocessing:
+  - _target_: clinicadl.data.datatypes.PETLinear
+  - reconstruction: "coregiso"
+  - suvr_reference_region: "cerebellumPons2"
+
+transforms: 
+  - extraction:
+    - _target_: clinicadl.transforms.extraction.Slice
+    - slice_min: 80
+    - slice_max: 120
+    - slice_stride: 2
+    - slice_direction: 2
+  - image_transforms: 
+  - resize: [${img_size}, ${img_size}]
+  - simulate_hypo: true 
+    - pathology: AD
+    - percentage: 30 

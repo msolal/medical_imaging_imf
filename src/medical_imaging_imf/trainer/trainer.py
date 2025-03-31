@@ -12,6 +12,7 @@ class Trainer():
         model: SchrodBridgeIMF,
         optimizer_forward,
         optimizer_backward,
+        ema: torch.nn.Module,
         train_config,
     ):
 

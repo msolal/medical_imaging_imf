@@ -3,7 +3,7 @@ from typing import Any
 import hydra
 from lightning import LightningDataModule, LightningModule, Trainer
 from lightning.pytorch.loggers import Logger
-from lightning_hydra_template.utils import (
+from medical_imaging_imf.utils import (
     RankedLogger,
     extras,
     instantiate_loggers,

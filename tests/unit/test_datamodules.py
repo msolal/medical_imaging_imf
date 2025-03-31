@@ -3,7 +3,7 @@ from pathlib import Path
 import pytest
 import torch
 
-from lightning_hydra_template.data.mnist_datamodule import MNISTDataModule
+from medical_imaging_imf.data.mnist_datamodule import MNISTDataModule
 
 
 @pytest.mark.parametrize("batch_size", [32, 128])

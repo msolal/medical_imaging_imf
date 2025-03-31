@@ -9,7 +9,6 @@ class SchrodBridgeIMF(torch.nn.Module):
         self,
         network_forward: torch.nn.Module,
         network_backward: torch.nn.Module,
-        ema: torch.nn.Module,
         sigma: float = 1.0,
     ):
         self.network_forward = network_forward

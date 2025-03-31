@@ -4,7 +4,7 @@ import pytest
 from hydra.core.hydra_config import HydraConfig
 from omegaconf import DictConfig, open_dict
 
-from lightning_hydra_template.train import train
+from medical_imaging_imf.train import train
 
 from ..helpers.run import RunIf  # noqa: TID252
 

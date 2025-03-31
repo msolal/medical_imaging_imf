@@ -1,0 +1,31 @@
+caps_dir: /path/to/adni/caps
+split_path: /path/to/adni/splits
+
+img_size: 128
+slice_direction: 2
+
+preprocessing:
+  _target_: clinicadl.data.datatypes.PETLinear
+  tracer: "18FFDG"
+  reconstruction: "coregiso"
+  suvr_reference_region: "cerebellumPons2"
+
+extraction: 
+  _target_: clinicadl.transforms.extraction.Slice
+  slice_direction: ${..slice_direction}
+  slices: 
+    _target_: medical_imaging_imf.utils.resolve_slices
+    slice_min: 54 # WARNING: to change when changing img_size
+    slice_max: 74 # WARNING: to change when changing img_size
+    slice_stride: 1
+
+image_transforms:
+  _target_: clinicadl.transforms.config.RescaleIntensityConfig
+  out_min_max: [-1, 1]
+
+sample_transforms:
+  _target_: clinicadl.transforms.config.ResizeConfig
+  target_shape: 
+    _target_: medical_imaging_imf.utils.resolve_slice_resize_target_shape
+    img_size: ${...img_size}
+    slice_direction: ${...slice_direction}

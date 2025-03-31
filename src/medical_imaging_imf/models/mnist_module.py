@@ -2,7 +2,7 @@ from typing import Any
 
 import torch
 from lightning import LightningModule
-from lightning_hydra_template.utils import pad_keys
+from medical_imaging_imf.utils import pad_keys
 from torchmetrics import MeanMetric, MetricCollection, MetricTracker
 
 

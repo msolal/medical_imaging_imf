@@ -1,7 +1,7 @@
 import hydra
 from lightning import Callback
 from lightning.pytorch.loggers import Logger
-from lightning_hydra_template.utils import pylogger
+from medical_imaging_imf.utils import pylogger
 from omegaconf import DictConfig
 
 log = pylogger.RankedLogger(__name__, rank_zero_only=True)

@@ -101,7 +101,7 @@ The directory structure of new project looks like this:
 ├── scripts                <- Shell scripts
 │
 ├── src                    <- Source code
-│   └── lightning_hydra_template  <- Package directory
+│   └── medical_imaging_imf  <- Package directory
 │       │
 │       ├── configs                 <- Hydra configs
 │       │   ├── callbacks              <- Callbacks configs
@@ -154,7 +154,7 @@ uv sync --extra cpu --extra wandb
 ```
 
 Template contains example with MNIST classification.<br>
-When running `python src/lightning_hydra_template/train.py` you should see something like this:
+When running `python src/medical_imaging_imf/train.py` you should see something like this:
 
 <div align="center">
 
@@ -168,7 +168,7 @@ When running `python src/lightning_hydra_template/train.py` you should see somet
 <summary><b>Override any config parameter from command line</b></summary>
 
 ```bash
-python src/lightning_hydra_template/train.py trainer.max_epochs=20 model.optimizer.lr=1e-4
+python src/medical_imaging_imf/train.py trainer.max_epochs=20 model.optimizer.lr=1e-4
 
 # [OPTIONAL] call the script using the defined entrypoint
 template-train trainer.max_epochs=20 model.optimizer.lr=1e-4
@@ -178,7 +178,7 @@ template-train trainer.max_epochs=20 model.optimizer.lr=1e-4
 > You can also add new parameters with `+` sign.
 
 ```bash
-python src/lightning_hydra_template/train.py +model.new_param="owo"
+python src/medical_imaging_imf/train.py +model.new_param="owo"
 ```
 
 </details>
@@ -188,13 +188,13 @@ python src/lightning_hydra_template/train.py +model.new_param="owo"
 
 ```bash
 # train on CPU
-python src/lightning_hydra_template/train.py trainer=cpu
+python src/medical_imaging_imf/train.py trainer=cpu
 
 # train on 1 GPU
-python src/lightning_hydra_template/train.py trainer=gpu
+python src/medical_imaging_imf/train.py trainer=gpu
 
 # train on TPU
-python src/lightning_hydra_template/train.py +trainer.tpu_cores=8
+python src/medical_imaging_imf/train.py +trainer.tpu_cores=8
 ```
 
 </details>
@@ -204,7 +204,7 @@ python src/lightning_hydra_template/train.py +trainer.tpu_cores=8
 
 ```bash
 # train with pytorch native automatic mixed precision (AMP)
-python src/lightning_hydra_template/train.py trainer=gpu +trainer.precision=16
+python src/medical_imaging_imf/train.py trainer=gpu +trainer.precision=16
 ```
 
 </details>
@@ -221,7 +221,7 @@ wandb:
 
 ```bash
 # train model with Weights&Biases (link to wandb dashboard should appear in the terminal)
-python src/lightning_hydra_template/train.py logger=wandb
+python src/medical_imaging_imf/train.py logger=wandb
 ```
 
 > [!NOTE]
@@ -239,11 +239,11 @@ python src/lightning_hydra_template/train.py logger=wandb
 <summary><b>Train model with chosen experiment config</b></summary>
 
 ```bash
-python src/lightning_hydra_template/train.py experiment=example
+python src/medical_imaging_imf/train.py experiment=example
 ```
 
 > [!TIP]
-> Experiment configs are placed in [configs/experiment/](src/lightning_hydra_template/configs/experiment/).
+> Experiment configs are placed in [configs/experiment/](src/medical_imaging_imf/configs/experiment/).
 
 </details>
 
@@ -251,14 +251,14 @@ python src/lightning_hydra_template/train.py experiment=example
 <summary><b>Attach some callbacks to run</b></summary>
 
 ```bash
-python src/lightning_hydra_template/train.py callbacks=default
+python src/medical_imaging_imf/train.py callbacks=default
 ```
 
 > [!NOTE]
 > Callbacks can be used for things such as model checkpointing, early stopping and [many more](https://lightning.ai/docs/pytorch/latest/extensions/callbacks.html#built-in-callbacks).
 
 > [!TIP]
-> Callbacks configs are placed in [configs/callbacks/](src/lightning_hydra_template/configs/callbacks/).
+> Callbacks configs are placed in [configs/callbacks/](src/medical_imaging_imf/configs/callbacks/).
 
 </details>
 
@@ -267,16 +267,16 @@ python src/lightning_hydra_template/train.py callbacks=default
 
 ```yaml
 # gradient clipping may be enabled to avoid exploding gradients
-python src/lightning_hydra_template/train.py +trainer.gradient_clip_val=0.5
+python src/medical_imaging_imf/train.py +trainer.gradient_clip_val=0.5
 
 # run validation loop 4 times during a training epoch
-python src/lightning_hydra_template/train.py +trainer.val_check_interval=0.25
+python src/medical_imaging_imf/train.py +trainer.val_check_interval=0.25
 
 # accumulate gradients
-python src/lightning_hydra_template/train.py +trainer.accumulate_grad_batches=10
+python src/medical_imaging_imf/train.py +trainer.accumulate_grad_batches=10
 
 # terminate training after 12 hours
-python src/lightning_hydra_template/train.py +trainer.max_time="00:12:00:00"
+python src/medical_imaging_imf/train.py +trainer.max_time="00:12:00:00"
 ```
 
 > [!NOTE]
@@ -292,24 +292,24 @@ python src/lightning_hydra_template/train.py +trainer.max_time="00:12:00:00"
 # changes logging directory to `logs/debugs/...`
 # sets level of all command line loggers to 'DEBUG'
 # enforces debug-friendly configuration
-python src/lightning_hydra_template/train.py debug=default
+python src/medical_imaging_imf/train.py debug=default
 
 # run 1 train, val and test loop, using only 1 batch
-python src/lightning_hydra_template/train.py debug=fdr
+python src/medical_imaging_imf/train.py debug=fdr
 
 # print execution time profiling
-python src/lightning_hydra_template/train.py debug=profiler
+python src/medical_imaging_imf/train.py debug=profiler
 
 # raise exception if there are any numerical anomalies in tensors, like NaN or +/-inf
-python src/lightning_hydra_template/train.py +trainer.detect_anomaly=true
+python src/medical_imaging_imf/train.py +trainer.detect_anomaly=true
 
 # use only 20% of the data
-python src/lightning_hydra_template/train.py +trainer.limit_train_batches=0.2 \
+python src/medical_imaging_imf/train.py +trainer.limit_train_batches=0.2 \
 +trainer.limit_val_batches=0.2 +trainer.limit_test_batches=0.2
 ```
 
 > [!TIP]
-> Visit [configs/debug/](src/lightning_hydra_template/configs/debug/) for different debugging configs.
+> Visit [configs/debug/](src/medical_imaging_imf/configs/debug/) for different debugging configs.
 
 </details>
 
@@ -317,7 +317,7 @@ python src/lightning_hydra_template/train.py +trainer.limit_train_batches=0.2 \
 <summary><b>Resume training from checkpoint</b></summary>
 
 ```yaml
-python src/lightning_hydra_template/train.py ckpt_path="/path/to/ckpt/name.ckpt"
+python src/medical_imaging_imf/train.py ckpt_path="/path/to/ckpt/name.ckpt"
 ```
 
 > [!NOTE]
@@ -332,7 +332,7 @@ python src/lightning_hydra_template/train.py ckpt_path="/path/to/ckpt/name.ckpt"
 <summary><b>Evaluate checkpoint on test dataset</b></summary>
 
 ```yaml
-python src/lightning_hydra_template/eval.py ckpt_path="/path/to/ckpt/name.ckpt"
+python src/medical_imaging_imf/eval.py ckpt_path="/path/to/ckpt/name.ckpt"
 ```
 
 > [!NOTE]
@@ -346,7 +346,7 @@ python src/lightning_hydra_template/eval.py ckpt_path="/path/to/ckpt/name.ckpt"
 ```bash
 # this will run 6 experiments one after the other,
 # each with different combination of batch_size and learning rate
-python src/lightning_hydra_template/train.py -m data.batch_size=32,64,128 model.lr=0.001,0.0005
+python src/medical_imaging_imf/train.py -m data.batch_size=32,64,128 model.lr=0.001,0.0005
 ```
 
 > [!WARNING]
@@ -360,11 +360,11 @@ python src/lightning_hydra_template/train.py -m data.batch_size=32,64,128 model.
 ```bash
 # this will run hyperparameter search defined in `configs/hparams_search/mnist_optuna.yaml`
 # over chosen experiment config
-python src/lightning_hydra_template/train.py -m hparams_search=mnist_optuna experiment=example
+python src/medical_imaging_imf/train.py -m hparams_search=mnist_optuna experiment=example
 ```
 
 > [!NOTE]
-> Using [Optuna Sweeper](https://hydra.cc/docs/next/plugins/optuna_sweeper) doesn't require you to add any boilerplate to your code, everything is defined in a [single config file](src/lightning_hydra_template/configs/hparams_search/mnist_optuna.yaml).
+> Using [Optuna Sweeper](https://hydra.cc/docs/next/plugins/optuna_sweeper) doesn't require you to add any boilerplate to your code, everything is defined in a [single config file](src/medical_imaging_imf/configs/hparams_search/mnist_optuna.yaml).
 
 > [!WARNING]
 > Optuna sweeps are not failure-resistant (if one job crashes then the whole sweep crashes).
@@ -375,11 +375,11 @@ python src/lightning_hydra_template/train.py -m hparams_search=mnist_optuna expe
 <summary><b>Execute all experiments from folder</b></summary>
 
 ```bash
-python src/lightning_hydra_template/train.py -m 'experiment=glob(*)'
+python src/medical_imaging_imf/train.py -m 'experiment=glob(*)'
 ```
 
 > [!NOTE]
-> Hydra provides special syntax for controlling behavior of multiruns. Learn more [here](https://hydra.cc/docs/next/tutorials/basic/running_your_app/multi-run). The command above executes all experiments from [configs/experiment/](src/lightning_hydra_template/configs/experiment/).
+> Hydra provides special syntax for controlling behavior of multiruns. Learn more [here](https://hydra.cc/docs/next/tutorials/basic/running_your_app/multi-run). The command above executes all experiments from [configs/experiment/](src/medical_imaging_imf/configs/experiment/).
 
 </details>
 
@@ -387,7 +387,7 @@ python src/lightning_hydra_template/train.py -m 'experiment=glob(*)'
 <summary><b>Execute run for multiple different seeds</b></summary>
 
 ```bash
-python src/lightning_hydra_template/train.py -m seed=1,2,3,4,5 trainer.deterministic=True logger=csv tags=["benchmark"]
+python src/medical_imaging_imf/train.py -m seed=1,2,3,4,5 trainer.deterministic=True logger=csv tags=["benchmark"]
 ```
 
 > [!WARNING]
@@ -453,16 +453,16 @@ pytest -k "not slow"
 Each experiment should be tagged in order to easily filter them across files or in logger UI:
 
 ```bash
-python src/lightning_hydra_template/train.py tags=["mnist","experiment_X"]
+python src/medical_imaging_imf/train.py tags=["mnist","experiment_X"]
 ```
 
 > [!NOTE]
-> You might need to escape the bracket characters in your shell with `python src/lightning_hydra_template/train.py tags=\["mnist","experiment_X"\]`.
+> You might need to escape the bracket characters in your shell with `python src/medical_imaging_imf/train.py tags=\["mnist","experiment_X"\]`.
 
 If no tags are provided, you will be asked to input them from command line:
 
 ```bash
->>> python src/lightning_hydra_template/train.py tags=[]
+>>> python src/medical_imaging_imf/train.py tags=[]
 [2022-07-11 15:40:09,358][src.utils.utils][INFO] - Enforcing tags! <cfg.extras.enforce_tags=True>
 [2022-07-11 15:40:09,359][src.utils.rich_utils][WARNING] - No tags provided in config. Prompting user to input tags...
 Enter a list of comma separated tags (dev):
@@ -471,7 +471,7 @@ Enter a list of comma separated tags (dev):
 If no tags are provided for multirun, an error will be raised:
 
 ```bash
->>> python src/lightning_hydra_template/train.py -m +x=1,2,3 tags=[]
+>>> python src/medical_imaging_imf/train.py -m +x=1,2,3 tags=[]
 ValueError: Specify tags before launching a multirun!
 ```
 
@@ -502,10 +502,10 @@ Suggestions for improvements are always welcome!
 All PyTorch Lightning modules are dynamically instantiated from module paths specified in config. Example model config:
 
 ```yaml
-_target_: lightning_hydra_template.models.mnist_module.MNISTLitModule
+_target_: medical_imaging_imf.models.mnist_module.MNISTLitModule
 lr: 0.001
 net:
-  _target_: lightning_hydra_template.models.components.simple_dense_net.SimpleDenseNet
+  _target_: medical_imaging_imf.models.components.simple_dense_net.SimpleDenseNet
   input_size: 784
   lin1_size: 256
   lin2_size: 256
@@ -524,18 +524,18 @@ This allows you to easily iterate over new models! Every time you create a new o
 Switch between models and datamodules with command line arguments:
 
 ```bash
-python src/lightning_hydra_template/train.py model=mnist
+python src/medical_imaging_imf/train.py model=mnist
 ```
 
-Example pipeline managing the instantiation logic: [src/lightning_hydra_template/train.py](src/lightning_hydra_template/train.py).
+Example pipeline managing the instantiation logic: [src/medical_imaging_imf/train.py](src/medical_imaging_imf/train.py).
 
 <br>
 
 ## Main Config
 
-Location: [configs/train.yaml](src/lightning_hydra_template/configs/train.yaml) <br>
+Location: [configs/train.yaml](src/medical_imaging_imf/configs/train.yaml) <br>
 Main project config contains default training configuration.<br>
-It determines how config is composed when simply executing command `python src/lightning_hydra_template/train.py`.<br>
+It determines how config is composed when simply executing command `python src/medical_imaging_imf/train.py`.<br>
 
 <details>
 <summary><b>Show main project config</b></summary>
@@ -546,7 +546,7 @@ defaults:
   - data: mnist.yaml
   - model: mnist.yaml
   - callbacks: default.yaml
-  - logger: null # set logger here or use command line (e.g. `python src/lightning_hydra_template/train.py logger=csv`)
+  - logger: null # set logger here or use command line (e.g. `python src/medical_imaging_imf/train.py logger=csv`)
   - trainer: default.yaml
   - paths: default.yaml
   - extras: default.yaml
@@ -563,7 +563,7 @@ defaults:
   # it's optional since it doesn't need to exist and is excluded from version control
   - optional local: default.yaml
 
-  # debugging config (enable through command line, e.g. `python src/lightning_hydra_template/train.py debug=default)
+  # debugging config (enable through command line, e.g. `python src/medical_imaging_imf/train.py debug=default)
   - debug: null
 
   - _self_
@@ -573,7 +573,7 @@ task_name: "train"
 
 # tags to help you identify your experiments
 # you can overwrite this in experiment configs
-# overwrite from command line with `python src/lightning_hydra_template/train.py tags="[first_tag, second_tag]"`
+# overwrite from command line with `python src/medical_imaging_imf/train.py tags="[first_tag, second_tag]"`
 # appending lists from command line is currently not supported :(
 # https://github.com/facebookresearch/hydra/issues/1547
 tags: ["dev"]
@@ -598,7 +598,7 @@ seed: null
 
 ## Experiment Config
 
-Location: [configs/experiment](src/lightning_hydra_template/configs/experiment)<br>
+Location: [configs/experiment](src/medical_imaging_imf/configs/experiment)<br>
 Experiment configs allow you to overwrite parameters from main config.<br>
 For example, you can use them to version control best hyperparameters for each combination of model and dataset.
 
@@ -609,7 +609,7 @@ For example, you can use them to version control best hyperparameters for each c
 # @package _global_
 
 # to execute this experiment run:
-# python src/lightning_hydra_template/train.py experiment=example
+# python src/medical_imaging_imf/train.py experiment=example
 
 defaults:
   - override /data: mnist.yaml
@@ -654,12 +654,12 @@ logger:
 
 ### Basic workflow
 
-1. Write your PyTorch Lightning module (see [models/mnist_module.py](src/lightning_hydra_template/models/mnist_module.py) for example)
-2. Write your PyTorch Lightning datamodule (see [data/mnist_datamodule.py](src/lightning_hydra_template/data/mnist_datamodule.py) for example)
+1. Write your PyTorch Lightning module (see [models/mnist_module.py](src/medical_imaging_imf/models/mnist_module.py) for example)
+2. Write your PyTorch Lightning datamodule (see [data/mnist_datamodule.py](src/medical_imaging_imf/data/mnist_datamodule.py) for example)
 3. Write your experiment config, containing paths to model and datamodule
 4. Run training with chosen experiment config:
    ```bash
-   python src/lightning_hydra_template/train.py experiment=experiment_name.yaml
+   python src/medical_imaging_imf/train.py experiment=experiment_name.yaml
    ```
 
 ### Experiment design
@@ -669,7 +669,7 @@ _Say you want to execute many runs to plot how accuracy changes in respect to ba
 1. Execute the runs with some config parameter that allows you to identify them easily, like tags:
 
    ```bash
-   python src/lightning_hydra_template/train.py -m logger=csv data.batch_size=16,32,64,128 tags=["batch_size_exp"]
+   python src/medical_imaging_imf/train.py -m logger=csv data.batch_size=16,32,64,128 tags=["batch_size_exp"]
    ```
 
 2. Write a script or notebook that searches over the `logs/` folder and retrieves csv logs from runs containing given tags in config. Plot the results.
@@ -705,7 +705,7 @@ Default logging structure:
 │       └── ...
 ```
 
-You can change this structure by modifying paths in [hydra configuration](src/lightning_hydra_template/configs/hydra).
+You can change this structure by modifying paths in [hydra configuration](src/medical_imaging_imf/configs/hydra).
 
 <br>
 
@@ -713,17 +713,17 @@ You can change this structure by modifying paths in [hydra configuration](src/li
 
 PyTorch Lightning supports many popular logging frameworks: [Weights&Biases](https://www.wandb.com/), [Neptune](https://neptune.ai/), [Comet](https://www.comet.ml/), [MLFlow](https://mlflow.org), [Tensorboard](https://www.tensorflow.org/tensorboard/).
 
-These tools help you keep track of hyperparameters and output metrics and allow you to compare and visualize results. To use one of them simply complete its configuration in [configs/logger](src/lightning_hydra_template/configs/logger) and run:
+These tools help you keep track of hyperparameters and output metrics and allow you to compare and visualize results. To use one of them simply complete its configuration in [configs/logger](src/medical_imaging_imf/configs/logger) and run:
 
 ```bash
-python src/lightning_hydra_template/train.py logger=logger_name
+python src/medical_imaging_imf/train.py logger=logger_name
 ```
 
-You can use many of them at once (see [configs/logger/many_loggers.yaml](src/lightning_hydra_template/configs/logger/many_loggers.yaml) for example).
+You can use many of them at once (see [configs/logger/many_loggers.yaml](src/medical_imaging_imf/configs/logger/many_loggers.yaml) for example).
 
 You can also write your own logger.
 
-Lightning provides convenient method for logging custom metrics from inside LightningModule. Read the [docs](https://lightning.ai/docs/pytorch/latest/extensions/logging.html#automatic-logging) or take a look at [MNIST example](src/lightning_hydra_template/models/mnist_module.py).
+Lightning provides convenient method for logging custom metrics from inside LightningModule. Read the [docs](https://lightning.ai/docs/pytorch/latest/extensions/logging.html#automatic-logging) or take a look at [MNIST example](src/medical_imaging_imf/models/mnist_module.py).
 
 <br>
 
@@ -761,7 +761,7 @@ There is also `@RunIf` decorator implemented, that allows you to run tests only 
 
 ## Hyperparameter Search
 
-You can define hyperparameter search by adding new config file to [configs/hparams_search](src/lightning_hydra_template/configs/hparams_search).
+You can define hyperparameter search by adding new config file to [configs/hparams_search](src/medical_imaging_imf/configs/hparams_search).
 
 <details>
 <summary><b>Show example hyperparameter search config</b></summary>
@@ -806,7 +806,7 @@ hydra:
 
 </details>
 
-Next, execute it with: `python src/lightning_hydra_template/train.py -m hparams_search=mnist_optuna`
+Next, execute it with: `python src/medical_imaging_imf/train.py -m hparams_search=mnist_optuna`
 
 Using this approach doesn't require adding any boilerplate to code, everything is defined in a single config file. The only necessary thing is to return the optimized metric value from the launch file.
 
@@ -833,7 +833,7 @@ Template comes with CI workflows implemented in Github Actions:
 The simplest way is to pass datamodule attribute directly to model on initialization:
 
 ```python
-# ./src/lightning_hydra_template/train.py
+# ./src/medical_imaging_imf/train.py
 datamodule = hydra.utils.instantiate(config.data)
 model = hydra.utils.instantiate(config.model, some_param=datamodule.some_param)
 ```
@@ -844,7 +844,7 @@ model = hydra.utils.instantiate(config.model, some_param=datamodule.some_param)
 Similarly, you can pass a whole datamodule config as an init parameter:
 
 ```python
-# ./src/lightning_hydra_template/train.py
+# ./src/medical_imaging_imf/train.py
 model = hydra.utils.instantiate(config.model, dm_conf=config.data, _recursive_=False)
 ```
 
@@ -852,7 +852,7 @@ You can also pass a datamodule config parameter to your model through variable i
 
 ```yaml
 # ./configs/model/my_model.yaml
-_target_: lightning_hydra_template.models.my_module.MyLitModule
+_target_: medical_imaging_imf.models.my_module.MyLitModule
 lr: 0.01
 some_param: ${data.some_param}
 ```
@@ -860,7 +860,7 @@ some_param: ${data.some_param}
 Another approach is to access datamodule in LightningModule directly through Trainer:
 
 ```python
-# ./src/lightning_hydra_template/models/mnist_module.py
+# ./src/medical_imaging_imf/models/mnist_module.py
 def on_train_start(self):
   self.some_param = self.trainer.datamodule.some_param
 ```
@@ -910,13 +910,13 @@ To run a python script using the environment installed by `uv`, you have two opt
 
 ```bash
 # 1. Use `uv run` to run the script within the uv environment
-uv run src/lightning_hydra_template/train.py ...
+uv run src/medical_imaging_imf/train.py ...
 #    or to run the defined entrypoint
 uv run template-train ...
 
 # 2. Manually activate the uv environment and then run the script or entrypoint (like in any other virtual environment)
 source .venv/bin/activate
-python src/lightning_hydra_template/train.py ...
+python src/medical_imaging_imf/train.py ...
 ```
 
 For simplicity, commands in this README assume that you have activated the virtual environment by running
@@ -956,7 +956,7 @@ pre-commit autoupdate
 
 System specific variables (e.g. absolute paths to datasets) should not be under version control or it will result in conflict between different users. Your private keys also shouldn't be versioned since you don't want them to be leaked.<br>
 
-Template contains [`configs/local/example.yaml`](src/lightning_hydra_template/configs/local/example.yaml) file, which serves as an example.
+Template contains [`configs/local/example.yaml`](src/medical_imaging_imf/configs/local/example.yaml) file, which serves as an example.
 Create a new file called `configs/local/default.yaml` (all `local/*` configs except for `example.yaml` are excluded from version control in the [`.gitignore`](.gitignore)).
 You can use it for declaring environment variables like this:
 
@@ -1114,7 +1114,7 @@ git commit -m "Add raw data"
 <summary><b>Support installing project as a package</b></summary>
 
 It allows other people to easily use your modules in their own projects.
-Change name of the [lightning_hydra_template](src/lightning_hydra_template) folder to your project name.
+Change name of the [medical_imaging_imf](src/medical_imaging_imf) folder to your project name.
 
 Now your project can be installed from local files:
 
@@ -1140,7 +1140,7 @@ from project_name.data.mnist_datamodule import MNISTDataModule
 <details>
 <summary><b>Keep local configs out of code versioning</b></summary>
 
-Some configurations are user/machine/installation specific (e.g. configuration of local cluster, or harddrive paths on a specific machine). For such scenarios, a file [configs/local/default.yaml](src/lightning_hydra_template/configs/local/) can be created which is automatically loaded but not tracked by Git.
+Some configurations are user/machine/installation specific (e.g. configuration of local cluster, or harddrive paths on a specific machine). For such scenarios, a file [configs/local/default.yaml](src/medical_imaging_imf/configs/local/) can be created which is automatically loaded but not tracked by Git.
 
 For example, you can use it for a SLURM cluster config:
 
@@ -1298,7 +1298,7 @@ python src/your_repo_name/train.py trainer=cpu
 python src/your_repo_name/train.py trainer=gpu
 ```
 
-Train model with chosen experiment configuration from [configs/experiment/](src/lightning_hydra_template/configs/experiment/)
+Train model with chosen experiment configuration from [configs/experiment/](src/medical_imaging_imf/configs/experiment/)
 
 ```bash
 python src/your_repo_name/train.py experiment=experiment_name.yaml

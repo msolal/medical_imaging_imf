@@ -8,7 +8,7 @@ from hydra import compose, initialize
 from hydra.core.global_hydra import GlobalHydra
 from omegaconf import DictConfig, open_dict
 
-from lightning_hydra_template.utils import pre_hydra_routine
+from medical_imaging_imf.utils import pre_hydra_routine
 
 
 @pytest.fixture(scope="package", autouse=True)
@@ -25,7 +25,7 @@ def cfg_path() -> Path:
         The path to the directory containing the Hydra configuration files, relative to the test directory.
     """
     test_dir = Path(__file__).parent
-    cfg_dir = Path(os.environ["PROJECT_ROOT"], "src/lightning_hydra_template/configs")
+    cfg_dir = Path(os.environ["PROJECT_ROOT"], "src/medical_imaging_imf/configs")
     return cfg_dir.relative_to(test_dir, walk_up=True)
 
 

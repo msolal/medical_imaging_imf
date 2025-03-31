@@ -2,10 +2,10 @@ defaults:
   - optimizer: adam
   - scheduler: reduce_lr_on_plateau
 
-_target_: lightning_hydra_template.models.mnist_module.MNISTLitModule
+_target_: medical_imaging_imf.models.mnist_module.MNISTLitModule
 
 net:
-  _target_: lightning_hydra_template.models.components.simple_dense_net.SimpleDenseNet
+  _target_: medical_imaging_imf.models.components.simple_dense_net.SimpleDenseNet
   input_size: 784
   lin1_size: 64
   lin2_size: 128

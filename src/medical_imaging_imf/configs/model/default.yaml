@@ -1,0 +1,17 @@
+defaults: 
+  - unet: unet_hf
+
+# _target_: medical_imaging_imf.models.mnist_module.MNISTLitModule
+
+# metrics:
+#   _target_: torchmetrics.MetricCollection
+#   # since MetricCollection does not recognize OmegaConf containers as their corresponding Python primitives
+#   # force the conversion of OmegaConf containers to Python primitives
+#   _convert_: all
+#   metrics:
+#     acc:
+#       _target_: torchmetrics.Accuracy
+#       task: multiclass
+#       num_classes: 10
+
+sigma: 1.0

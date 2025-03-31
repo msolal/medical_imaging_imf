@@ -5,7 +5,7 @@ import lightning as L  # noqa: N812
 import torch
 from lightning import Callback, LightningDataModule, LightningModule, Trainer
 from lightning.pytorch.loggers import Logger
-from lightning_hydra_template.utils import (
+from medical_imaging_imf.utils import (
     RankedLogger,
     extras,
     get_metric_value,

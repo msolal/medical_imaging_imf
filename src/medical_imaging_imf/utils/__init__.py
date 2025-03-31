@@ -1,13 +1,15 @@
-from lightning_hydra_template.utils.instantiators import instantiate_callbacks, instantiate_loggers
-from lightning_hydra_template.utils.logging_utils import log_hyperparameters, pad_keys
-from lightning_hydra_template.utils.pylogger import RankedLogger
-from lightning_hydra_template.utils.rich_utils import enforce_tags, print_config_tree
-from lightning_hydra_template.utils.utils import (
+from medical_imaging_imf.utils.instantiators import instantiate_callbacks, instantiate_loggers
+from medical_imaging_imf.utils.logging_utils import log_hyperparameters, pad_keys
+from medical_imaging_imf.utils.pylogger import RankedLogger
+from medical_imaging_imf.utils.rich_utils import enforce_tags, print_config_tree
+from medical_imaging_imf.utils.utils import (
     extras,
     get_metric_value,
     hydra_serial_sweeper,
     pre_hydra_routine,
     task_wrapper,
+    resolve_slice_resize_target_shape,
+    resolve_slices,
 )
 
 __all__ = [
@@ -23,4 +25,6 @@ __all__ = [
     "pre_hydra_routine",
     "print_config_tree",
     "task_wrapper",
+    "resolve_slice_resize_target_shape",
+    "resolve_slices",
 ]
