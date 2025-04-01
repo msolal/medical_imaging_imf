@@ -1,0 +1,9 @@
+dim : 128
+init_dim : "None"
+out_dim : "None"
+dim_mults : [1, 1, 2]
+channels : 1
+
+self_condition : False
+resnet_block_groups : 4
+n_block_klass : 2

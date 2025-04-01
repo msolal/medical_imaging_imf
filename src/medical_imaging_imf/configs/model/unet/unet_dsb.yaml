@@ -1,0 +1,30 @@
+# Relative to input/output
+in_channels : 1
+out_channels : 1 
+dims : 2 # 2D 
+
+# Layers
+channel_mult : [1, 2, 4]
+num_res_blocks : 4
+model_channels : 1
+
+# Conditional
+num_classes :  None
+
+# Attention
+attention_resolutions : 16
+num_heads : 1
+
+# Dropout 
+dropout : 0.
+
+# Upsampling/Downsampling options
+conv_resample : True
+resblock_updown : False
+
+# Time embedding
+temb_scale :  1
+use_scale_shift_norm : False
+
+# Memory 
+use_checkpoint : False
