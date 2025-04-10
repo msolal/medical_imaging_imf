@@ -1,15 +1,20 @@
 from functools import partial
-import torch.nn as nn
+
 import torch
-from .layers import *
+import torch.nn as nn
+
+from medical_imaging_imf.models.unet_hf.layers import *
+
+from typing import Optional
+
 
 class Unet(nn.Module):
     def __init__(
         self,
         dim : int,
-        init_dim : None = None,
-        out_dim : None = None,
-        dim_mults : tuple[int] = (1, 2, 4, 8),
+        init_dim : Optional[int] = None,
+        out_dim : Optional[int] = None,
+        dim_mults : tuple[int, int, int, int] = (1, 2, 4, 8),
         channels : int = 3,
         self_condition : bool = False,
         resnet_block_groups : int = 4,
@@ -27,10 +32,10 @@ class Unet(nn.Module):
         self.init_conv = nn.Conv2d(input_channels, init_dim, 1, padding=0) # changed to 1 and 0 from 7,3
 
         dims = [init_dim, *map(lambda m: dim * m, dim_mults)]
-        in_out = list(zip(dims[:-1], dims[1:]))
-        
+        in_out = list(zip(dims[:-1], dims[1:], strict=False))
+
         block_klass = partial(ResnetBlock, groups=resnet_block_groups)
-        
+
         # time embeddings
         time_dim = dim * 4
 
@@ -86,7 +91,7 @@ class Unet(nn.Module):
         self.final_res_block = block_klass(dim * 2, dim, time_emb_dim=time_dim)
         self.final_conv = nn.Conv2d(dim, self.out_dim, 1)
 
-    def forward(self, x, time, x_self_cond=None):
+    def forward(self, time, x, x_self_cond=None):
         if self.self_condition:
             x_self_cond = default(x_self_cond, lambda: torch.zeros_like(x))
             x = torch.cat((x_self_cond, x), dim=1)

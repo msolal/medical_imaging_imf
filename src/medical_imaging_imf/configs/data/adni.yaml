@@ -1,7 +1,8 @@
-caps_dir: /path/to/adni/caps
-split_path: /path/to/adni/splits
+caps_dir: /Users/maelys.solal/Documents/datasets/adni/caps/caps_pet_uniform_v2025
+split_path: /Users/maelys.solal/Documents/datasets/adni
 
-img_size: 128
+# img_size: 128
+img_size: 32
 slice_direction: 2
 
 preprocessing:
@@ -15,8 +16,8 @@ extraction:
   slice_direction: ${..slice_direction}
   slices: 
     _target_: medical_imaging_imf.utils.resolve_slices
-    slice_min: 54 # WARNING: to change when changing img_size
-    slice_max: 74 # WARNING: to change when changing img_size
+    slice_min: 80 
+    slice_max: 82
     slice_stride: 1
 
 image_transforms:

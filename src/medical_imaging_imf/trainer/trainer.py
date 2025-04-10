@@ -1,9 +1,13 @@
 import torch
 from torchtyping import TensorType
-from torch.utils.data import DataLoader, TensorDataset
+from torch.utils.data import DataLoader, TensorDataset, StackDataset
 
 from medical_imaging_imf.models.schrodinger_bridge import SchrodBridgeIMF
 
+from abc import abstractmethod
+from typing import Optional
+
+from tqdm import tqdm
 
 class Trainer():
 
@@ -12,23 +16,32 @@ class Trainer():
         model: SchrodBridgeIMF,
         optimizer_forward,
         optimizer_backward,
-        ema: torch.nn.Module,
         train_config,
+        ema: Optional[torch.nn.Module] = None,
     ):
 
-        self.model = model
+        self._init_config(train_config)
+
+        self.model = model.to(self.device)
 
         self.optimizer_forward = optimizer_forward
         self.optimizer_backward = optimizer_backward
 
-        self._init_config(train_config)
 
     def _init_config(
             self,
             train_config
     ):
-        pass
-
+        self.n_imf = train_config.n_imf
+        self.n_refresh = train_config.n_refresh
+        self.n_epoch = train_config.n_epoch
+                
+        self.device = train_config.device
+        self.n_device = train_config.n_device
+        
+        self.checkpoint_every_n_imf = train_config.checkpoint_every_n_imf
+        self.check_val_every_n_refresh = train_config.check_val_every_n_refresh
+        
     @abstractmethod
     def train(
         self,
@@ -45,6 +58,7 @@ class DSBMJointTrainer(Trainer):
         optimizer_forward,
         optimizer_backward,
         train_config,
+        ema,
     ):
 
         super().__init__(
@@ -52,25 +66,31 @@ class DSBMJointTrainer(Trainer):
             optimizer_forward,
             optimizer_backward,
             train_config,
+            ema,
         )
+        
+        self.lambda_ = 1
 
     def train(
         self,
         train_loader: DataLoader,
     ):
 
-        for imf_iteration in range(self.n_imf):
+        for imf_iteration in tqdm(range(self.n_imf), desc="IMF Iteration", leave=False):
 
             self.imf_iteration = imf_iteration
 
-            for refresh_iteration in range(self.n_refresh):
+            for refresh_iteration in tqdm(range(self.n_refresh), desc="Refresh Iteration", leave=False):
 
                 # NOTE : could load old model weights here
-                new_train_dataloader = self._generate_new_train_loader(train_loader)
+                new_train_loader = self._generate_new_train_loader(train_loader)
 
-                for epoch in range(self.n_epoch):
+                for epoch in tqdm(range(self.n_epoch), desc="Epoch", leave=False):
 
-                    for x0, x1 in new_train_dataloader:
+                    for x0, x1 in tqdm(new_train_loader, desc="Batch", leave=False):
+                        
+                        x0 = x0.squeeze(-1).to(self.device)
+                        x1 = x1.squeeze(-1).to(self.device)
 
                         self.optimizer_forward.zero_grad()
                         self.optimizer_backward.zero_grad()
@@ -84,19 +104,20 @@ class DSBMJointTrainer(Trainer):
         x1: TensorType,
     ):
 
-        t = torch.rand_like(x0)
+        # TODO cleaner shape handling for t
+        t = torch.rand((x0.shape[0], 1, 1, 1), device=self.device)
         z = torch.randn_like(x0)
 
         loss = (
             self.model.loss_forward(x0, x1, z, t)
             + self.model.loss_backward(x0, x1, z, t)
-            + self.lambda * self.model.loss_consistency(x0, x1, z, t)
+            + self.lambda_ * self.model.loss_consistency(x0, x1, z, t)
         )
 
-        loss.backward()
+        # loss.backward()
 
-        self.optimizer_forward.step()
-        self.optimizer_backward.step()
+        # self.optimizer_forward.step()
+        # self.optimizer_backward.step()
 
 
     def _generate_new_train_loader(
@@ -104,20 +125,29 @@ class DSBMJointTrainer(Trainer):
         train_loader: DataLoader,
 
     ):
-        new_tensor = torch.zeros((len(train_loader.dataset), 2, 1, *self.img_size))
+        
+        self.img_size = train_loader.dataset[0][0].shape[1:-1]
+        
+        new_tensor_x0 = torch.zeros((len(train_loader.dataset), 1, *self.img_size))
+        new_tensor_x1 = torch.zeros((len(train_loader.dataset), 1, *self.img_size)) 
 
         index = 0
-        if self.imf_iteration != 0:
+        # TODO change back to != 0
+        if self.imf_iteration == 0:
             for x0, x1 in train_loader:
-
+                
+                x0 = x0.squeeze(-1).to(self.device)
+                x1 = x1.squeeze(-1).to(self.device)
                 x0, x1 = self.model.mixture(x0, x1)
-
-                new_tensor[index: index + x0.shape[0], 0, ...] = x0
-                new_tensor[index: index + x0.shape[0], 1, ...] = x1
+                
+                # new_tensor has shape (total_n_slices, 2, channel, height, width)
+                new_tensor_x0[index: index + x0.shape[0], ...] = x0
+                new_tensor_x1[index: index + x0.shape[0], ...] = x1
 
                 index += x0.shape[0]
-            new_tensor_dataset = TensorDataset(new_tensor)
-            new_train_loader = DataLoader(new_tensor_dataset, batch_size = self.batch_size)
+            
+            new_tensor_dataset = TensorDataset(new_tensor_x0, new_tensor_x1)
+            new_train_loader = DataLoader(new_tensor_dataset, batch_size = train_loader.batch_size)
         else:
             new_train_loader = train_loader
 
@@ -205,7 +235,9 @@ class DSBMTrainer(Trainer):
         self,
         train_loader: DataLoader,
     ) -> DataLoader:
-        new_tensor = torch.zeros((len(train_loader.dataset), 2, 1, *self.img_size))
+        # TODO change channel
+        new_tensor_x0 = torch.zeros((len(train_loader.dataset), 1, *self.img_size))
+        new_tensor_x1 = torch.zeros((len(train_loader.dataset), 1, *self.img_size)) 
 
         index = 0
         if self.imf_iteration != 0:
@@ -213,12 +245,17 @@ class DSBMTrainer(Trainer):
 
                 x1 = self.model.sample_forward_sde(x0, self.n_timesteps)
 
-                new_tensor[index: index + x0.shape[0], 0, ...] = x0
-                new_tensor[index: index + x0.shape[0], 1, ...] = x1
+                new_tensor_x0[index: index + x0.shape[0], ...] = x0
+                new_tensor_x1[index: index + x0.shape[0], ...] = x1
 
                 index += x0.shape[0]
-            new_tensor_dataset = TensorDataset(new_tensor)
-            new_train_loader = DataLoader(new_tensor_dataset, batch_size = self.batch_size)
+                
+            new_tensor_dataset_x0 = TensorDataset(new_tensor_x0)
+            new_tensor_dataset_x1 = TensorDataset(new_tensor_x1)
+            
+            new_tensor_dataset = StackDataset([new_tensor_dataset_x0, new_tensor_dataset_x1])
+            
+            new_train_loader = DataLoader(new_tensor_dataset, batch_size = train_loader.batch_size)
         else:
             new_train_loader = train_loader
 

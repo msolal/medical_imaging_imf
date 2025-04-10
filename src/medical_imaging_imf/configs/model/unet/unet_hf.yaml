@@ -1,6 +1,8 @@
+_target_: medical_imaging_imf.models.unet_hf.unet_hugging_face.Unet
+
 dim : 128
-init_dim : "None"
-out_dim : "None"
+init_dim : null
+out_dim : null
 dim_mults : [1, 1, 2]
 channels : 1
 

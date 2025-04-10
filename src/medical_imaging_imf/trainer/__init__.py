@@ -1,1 +1,1 @@
-from .trainer import DSBMJointTrainer, DSBMTrainer
+from medical_imaging_imf.trainer.trainer import DSBMJointTrainer, DSBMTrainer

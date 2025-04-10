@@ -1,4 +1,11 @@
-batch_size: 64
-prefetch_factor:
-num_workers:
-shuffle:
+_partial_: true
+_target_: torch.utils.data.DataLoader
+batch_size: 2
+prefetch_factor: 1
+num_workers: 1
+shuffle: true
+pin_memory: true
+drop_last: false
+collate_fn: 
+  _target_: medical_imaging_imf.data.utils.collate_fn
+  _partial_: true
